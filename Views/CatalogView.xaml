@@ -27,7 +27,7 @@
 
         <local:Header Grid.Row="0" DataContext="{Binding HeaderViewModel}"/>
         
-        <Grid Grid.Row="1" Margin="10" Height="50">
+        <Grid Grid.Row="1" Margin="10" Height="60">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -45,12 +45,21 @@
                 Text="{Binding SearchString, UpdateSourceTrigger=PropertyChanged}"
             />
 
-            <Button Grid.Column="2" Margin="5" VerticalAlignment="Center"
-                    Height="40" Background="White" BorderBrush="White"
+            <Button Grid.Column="2" 
+                    Margin="5" 
+                    Style="{StaticResource MaterialDesignFloatingActionLightButton}"
+                    VerticalAlignment="Center"
+                    Height="50" 
+                    Width="50" 
+                    Background="White" 
+                    BorderBrush="White"
                     Command="{Binding CartPageCommand}">
-                <materialDesign:PackIcon Grid.Column="2" 
-                                         Kind="Cart" Foreground="Black" 
-                                         Height="30" Width="30"/>
+                <StackPanel>
+
+                    <materialDesign:PackIcon Kind="Cart" Foreground="Black" 
+                                             Height="30" Width="30"/>
+                </StackPanel>
+                
             </Button>
         </Grid>
 

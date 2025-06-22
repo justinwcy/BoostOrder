@@ -30,7 +30,6 @@ namespace BoostOrder.HttpClients
 
         public async Task<string> GetProductImageBase64String(string imageUrl)
         {
-            return "";
             var imageBytes = await _httpClient.GetByteArrayAsync(imageUrl);
             var base64String = Convert.ToBase64String(imageBytes);
             return base64String;
@@ -40,7 +39,6 @@ namespace BoostOrder.HttpClients
         {
             var requestUri = $"products?page=1";
             var allProducts = new List<Product>();
-            return allProducts;
             try
             {
                 var response = await _httpClient.GetAsync(requestUri);
