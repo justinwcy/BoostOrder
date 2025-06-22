@@ -1,0 +1,26 @@
+﻿<Window x:Class="BoostOrder.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BoostOrder"
+        xmlns:views="clr-namespace:BoostOrder.Views"
+        xmlns:viewModels="clr-namespace:BoostOrder.ViewModels"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="700" Width="500">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="5">
+            <Grid.Resources>
+                <DataTemplate DataType="{x:Type viewModels:CatalogViewModel}">
+                    <views:CatalogView/>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type viewModels:CartViewModel}">
+                    <views:CartView/>
+                </DataTemplate>
+            </Grid.Resources>
+
+            <ContentControl Content="{Binding CurrentViewModel}"></ContentControl>
+        </Grid>
+    </ScrollViewer>
+</Window>
