@@ -78,7 +78,7 @@ namespace BoostOrder.ViewModels
             LoadProductsCommand = new LoadProductsCommand(this, productStore);
             CartPageCommand = new NavigateCommand<CartViewModel>(cartViewNavigationService);
             HeaderViewModel = new HeaderViewModel<CartViewModel>(
-                "Category Name", cartViewNavigationService);
+                "Category Name", cartViewNavigationService, userId, cartStore);
         }
 
         public static CatalogViewModel LoadViewModel(

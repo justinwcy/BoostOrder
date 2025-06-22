@@ -16,14 +16,13 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-
-            <Button Grid.Column="0" Background="DeepSkyBlue" 
-                    Foreground="White" 
-                    BorderBrush="DeepSkyBlue"
-                    Margin="5"
-                    Command="{Binding PageCommand}">
-                <materialDesign:PackIcon Kind="ChevronLeft" />
-            </Button>
+            <Menu Grid.Column="0">
+                <MenuItem Foreground="White"
+                          Padding="20 0 -5 0"
+                          Icon="{materialDesign:PackIcon Kind=ChevronLeft}"
+                          Command="{Binding PageCommand}"/>
+            </Menu>
+            
             <TextBlock Grid.Column="1" Text="{Binding Title}" 
                        VerticalAlignment="Center" FontWeight="Bold" 
                        Foreground="White"
@@ -32,12 +31,17 @@
                        VerticalAlignment="Center" Foreground="White"
                        Margin="5"/>
             <local:CircularTextIcon Grid.Column="3"/>
-            <Button Grid.Column="4" Background="DeepSkyBlue" 
-                    Foreground="White" 
-                    BorderBrush="DeepSkyBlue"
-                    Margin="5">
-                <materialDesign:PackIcon Kind="DotsVertical" />
-            </Button>
+            
+            <Menu Grid.Column="4">
+                <MenuItem Foreground="White"
+                          Padding="20 0 0 0"
+                          Icon="{materialDesign:PackIcon Kind=DotsVertical}">
+                    <MenuItem Header="Clear Cart"
+                              Foreground="Black"
+                              Command="{Binding ClearCartCommand}"
+                              />
+                </MenuItem>
+            </Menu>
         </Grid>
     </Grid>
 </UserControl>

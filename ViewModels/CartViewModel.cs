@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Linq;
 using System.Windows.Input;
 
 using BoostOrder.Commands;
@@ -13,12 +15,18 @@ namespace BoostOrder.ViewModels
     {
         private readonly CartStore _cartStore;
 
-        public IEnumerable<CartProductViewModel> CartProductViewModels
+        private ObservableCollection<CartProductViewModel> _cartProductViewModels;
+
+        public ObservableCollection<CartProductViewModel> CartProductViewModels
         {
-            get
+            get => _cartProductViewModels;
+            set
             {
-                return _cartStore.Carts
-                    .Select((cart, index) => new CartProductViewModel(index, cart, _boostOrderHttpClient, _cartStore));
+                _cartProductViewModels = value;
+                OnPropertyChanged(nameof(GrandTotal));
+                OnPropertyChanged(nameof(CartProductViewModels));
+                OnPropertyChanged(nameof(TotalItems));
+                OnPropertyChanged(nameof(TotalBarVisible));
             }
         }
 
@@ -37,28 +45,12 @@ namespace BoostOrder.ViewModels
         public ICommand CheckoutCommand { get; }
         public HeaderViewModel<CatalogViewModel> HeaderViewModel { get; }
 
-        private IEnumerable<Cart> _carts;
-
-        public IEnumerable<Cart> Carts
-        {
-            get => _carts;
-            set
-            {
-                _carts = value;
-                OnPropertyChanged(nameof(Carts));
-                OnPropertyChanged(GrandTotal);
-                OnPropertyChanged(nameof(CartProductViewModels));
-                OnPropertyChanged(nameof(TotalItems));
-                OnPropertyChanged(nameof(TotalBarVisible));
-            }
-        }
-
-        public string GrandTotal => $"RM {Carts
-            .Sum(cart => cart.Quantity * cart.Product.RegularPrice)
+        public string GrandTotal => $"RM {CartProductViewModels
+            .Sum(cartProductViewModel => cartProductViewModel.Cart.Quantity * cartProductViewModel.Cart.Product.RegularPrice)
             .ToString("N2", CultureInfo.InvariantCulture)}";
 
-        public string TotalItems => $"Total ({Carts.Count()})";
-        public bool TotalBarVisible => Carts.Any();
+        public string TotalItems => $"Total ({CartProductViewModels.Count()})";
+        public bool TotalBarVisible => CartProductViewModels.Any();
 
         private readonly BoostOrderHttpClient _boostOrderHttpClient;
 
@@ -74,7 +66,7 @@ namespace BoostOrder.ViewModels
             _boostOrderHttpClient = boostOrderHttpClient;
             LoadCartCommand = new LoadCartCommand(this, _cartStore, userId);
             HeaderViewModel = new HeaderViewModel<CatalogViewModel>(
-                "Cart", catalogViewNavigationService);
+                "Cart", catalogViewNavigationService, userId, cartStore);
             CheckoutCommand = new CheckoutCommand();
         }
 
@@ -82,26 +74,45 @@ namespace BoostOrder.ViewModels
         {
             foreach (var cartAdded in cartsAdded)
             {
-                var cart = _carts.FirstOrDefault(cart => cart.Id == cartAdded.Id);
-                if (cart != null)
+                var cartProductViewModel = CartProductViewModels.FirstOrDefault(cart => cart.Id == cartAdded.Id);
+                if (cartProductViewModel != null)
                 {
-                    cart.Quantity = cartAdded.Quantity;
+                    cartProductViewModel.Cart.Quantity = cartAdded.Quantity;
                 }
                 else
                 {
-                    var cartList = _carts.ToList();
-                    cartList.Add(cartAdded);
-                    Carts = cartList;
+                    cartProductViewModel = new CartProductViewModel(
+                        CartProductViewModels.Count() + 1,
+                        cartAdded,
+                        _boostOrderHttpClient,
+                        _cartStore
+                    );
+                    CartProductViewModels.Add(cartProductViewModel);
                 }
             }
+
+            OnPropertyChanged(nameof(GrandTotal));
+            OnPropertyChanged(nameof(CartProductViewModels));
+            OnPropertyChanged(nameof(TotalItems));
+            OnPropertyChanged(nameof(TotalBarVisible));
         }
 
         private void OnCartsDeleted(IEnumerable<Cart> cartsDeleted)
         {
-            var deletedCarts = cartsDeleted.ToList();
-            var cartsNotDeleted = _carts
-                .Where(cart => !deletedCarts.Contains(cart));
-            Carts = cartsNotDeleted;
+            var deletedIds = cartsDeleted.Select(c => c.Id).ToHashSet();
+            var viewModelsToRemove = CartProductViewModels
+                .Where(viewModel => deletedIds.Contains(viewModel.Id))
+                .ToList();
+
+            foreach (var viewModel in viewModelsToRemove)
+            {
+                CartProductViewModels.Remove(viewModel);
+            }
+
+            OnPropertyChanged(nameof(GrandTotal));
+            OnPropertyChanged(nameof(CartProductViewModels));
+            OnPropertyChanged(nameof(TotalItems));
+            OnPropertyChanged(nameof(TotalBarVisible));
         }
 
         public static CartViewModel LoadViewModel(
@@ -122,7 +133,10 @@ namespace BoostOrder.ViewModels
 
         public void UpdateCarts(IEnumerable<Cart> carts)
         {
-            Carts = carts;
+            CartProductViewModels = new ObservableCollection<CartProductViewModel>(
+                carts
+                    .Select((cart, index) => 
+                        new CartProductViewModel(index, cart, _boostOrderHttpClient, _cartStore)));
         }
     }
 }

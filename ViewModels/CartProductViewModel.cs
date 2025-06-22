@@ -16,6 +16,7 @@ namespace BoostOrder.ViewModels
         private readonly int _index;
         public string Index => $"{_index}.";
         public Cart Cart { get; set; }
+        public Guid Id => Cart.Id;
         public string Sku => Cart.Product.Sku;
         public string Name => Cart.Product.Name;
         public string StockQuantity => $"{Cart.Product.StockQuantity} in stock";

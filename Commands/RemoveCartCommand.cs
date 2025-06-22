@@ -1,6 +1,5 @@
 ﻿using BoostOrder.Models;
 using BoostOrder.Stores;
-using BoostOrder.ViewModels;
 
 namespace BoostOrder.Commands
 {

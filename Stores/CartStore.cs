@@ -8,7 +8,7 @@ namespace BoostOrder.Stores
 {
     public class CartStore
     {
-        private List<Cart> _carts;
+        private readonly List<Cart> _carts;
         private Lazy<Task> _initializeLazy;
         private readonly BoostOrderDbContextFactory _dbContextFactory;
         public IEnumerable<Cart> Carts => _carts;
@@ -44,6 +44,7 @@ namespace BoostOrder.Stores
             _carts.AddRange(dbContext.Carts
                 .Include(cart=>cart.Product)
                 .ThenInclude(product => product.Images));
+
         }
 
         public async Task RemoveCart(Cart cart)
@@ -76,6 +77,7 @@ namespace BoostOrder.Stores
                 };
 
                 dbContext.Carts.Add(cartAdded);
+                _carts.Add(cartAdded);
             }
             else
             {
@@ -87,6 +89,20 @@ namespace BoostOrder.Stores
             // add product back for subscribers
             cartAdded.Product = product;
             CartsAdded?.Invoke([cartAdded]);
+        }
+
+        public async Task ClearUserCart(Guid userId)
+        {
+            await using var dbContext = _dbContextFactory.CreateDbContext();
+            var userCarts = dbContext.Carts
+                .Where(cart => cart.UserId == userId)
+                .ToList();
+
+            dbContext.Carts.RemoveRange(userCarts);
+            await dbContext.SaveChangesAsync();
+
+            _carts.RemoveAll(cart => cart.UserId == userId);
+            CartsDeleted?.Invoke(userCarts);
         }
     }
 }
