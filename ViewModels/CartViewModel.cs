@@ -90,11 +90,6 @@ namespace BoostOrder.ViewModels
                     CartProductViewModels.Add(cartProductViewModel);
                 }
             }
-
-            OnPropertyChanged(nameof(GrandTotal));
-            OnPropertyChanged(nameof(CartProductViewModels));
-            OnPropertyChanged(nameof(TotalItems));
-            OnPropertyChanged(nameof(TotalBarVisible));
         }
 
         private void OnCartsDeleted(IEnumerable<Cart> cartsDeleted)
@@ -108,11 +103,6 @@ namespace BoostOrder.ViewModels
             {
                 CartProductViewModels.Remove(viewModel);
             }
-
-            OnPropertyChanged(nameof(GrandTotal));
-            OnPropertyChanged(nameof(CartProductViewModels));
-            OnPropertyChanged(nameof(TotalItems));
-            OnPropertyChanged(nameof(TotalBarVisible));
         }
 
         public static CartViewModel LoadViewModel(

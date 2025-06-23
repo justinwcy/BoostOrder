@@ -47,7 +47,7 @@ namespace BoostOrder.ViewModels
             set
             {
                 _productViewModels = value;
-                OnPropertyChanged(nameof(ProductViewModels));
+                OnPropertyChanged();
             }
         }
 
@@ -61,7 +61,7 @@ namespace BoostOrder.ViewModels
             {
                 _searchString = value;
                 FilterProductViewModel(_searchString);
-                OnPropertyChanged(nameof(SearchString));
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(ProductViewModels));
             }
         }
@@ -74,7 +74,7 @@ namespace BoostOrder.ViewModels
             {
                 _cartCount = value;
                 NumberBadgeVM.Number = CartCount;
-                OnPropertyChanged(nameof(CartCount));
+                OnPropertyChanged();
             }
         }
 
