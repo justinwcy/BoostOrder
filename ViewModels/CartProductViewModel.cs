@@ -24,7 +24,8 @@ namespace BoostOrder.ViewModels
             .First(v => v.Sku == Cart.Sku).RegularPrice;
         public string RegularPrice => 
             $"RM {_productSkuPrice.ToString("N2", CultureInfo.InvariantCulture)}";
-        public string Quantity => $"{Cart.Quantity} {Sku} >";
+        public string Quantity => $"{Cart.Quantity} {Cart.Product.Variations
+            .First(v => v.Sku == Cart.Sku).UOM} >";
         public string TotalPrice =>
             $"RM {(Cart.Quantity * _productSkuPrice)
                 .ToString("N2", CultureInfo.InvariantCulture)}";
