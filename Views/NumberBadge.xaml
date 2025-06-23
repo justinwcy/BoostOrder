@@ -10,7 +10,7 @@
              d:DesignHeight="12" d:DesignWidth="12"
 >
     <Grid>
-        <Ellipse Fill="DeepSkyBlue"
+        <Ellipse Fill="Red"
                  Width="12"
                  Height="12"
                  HorizontalAlignment="Center"

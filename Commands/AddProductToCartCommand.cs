@@ -33,7 +33,8 @@ namespace BoostOrder.Commands
             await _cartStore.AddProductToCart(
                 _productViewModel.Product, 
                 _productViewModel.Quantity, 
-                _userId);
+                _userId,
+                _productViewModel.SelectedVariation.Sku);
         }
 
         private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)

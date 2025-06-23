@@ -30,7 +30,7 @@ namespace BoostOrder.ViewModels
             }
         }
 
-        private bool _isLoading { get; set; }
+        private bool _isLoading;
         public bool IsLoading
         {
             get => _isLoading;
@@ -46,7 +46,7 @@ namespace BoostOrder.ViewModels
         public HeaderViewModel<CatalogViewModel> HeaderViewModel { get; }
 
         public string GrandTotal => $"RM {CartProductViewModels
-            .Sum(cartProductViewModel => cartProductViewModel.Cart.Quantity * cartProductViewModel.Cart.Product.RegularPrice)
+            .Sum(cartProductViewModel => cartProductViewModel.Cart.Quantity * cartProductViewModel.Cart.Product.Variations.First(v => v.Sku == cartProductViewModel.Sku).RegularPrice)
             .ToString("N2", CultureInfo.InvariantCulture)}";
 
         public string TotalItems => $"Total ({CartProductViewModels.Count()})";
@@ -90,6 +90,10 @@ namespace BoostOrder.ViewModels
                     CartProductViewModels.Add(cartProductViewModel);
                 }
             }
+
+            OnPropertyChanged(nameof(GrandTotal));
+            OnPropertyChanged(nameof(TotalItems));
+            OnPropertyChanged(nameof(TotalBarVisible));
         }
 
         private void OnCartsDeleted(IEnumerable<Cart> cartsDeleted)
@@ -103,6 +107,10 @@ namespace BoostOrder.ViewModels
             {
                 CartProductViewModels.Remove(viewModel);
             }
+
+            OnPropertyChanged(nameof(GrandTotal));
+            OnPropertyChanged(nameof(TotalItems));
+            OnPropertyChanged(nameof(TotalBarVisible));
         }
 
         public static CartViewModel LoadViewModel(

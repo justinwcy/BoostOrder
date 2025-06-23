@@ -55,7 +55,7 @@
                     BorderBrush="White"
                     Command="{Binding CartPageCommand}">
                 <Grid>
-                    <materialDesign:PackIcon Kind="Cart" Foreground="Black" 
+                    <materialDesign:PackIcon Kind="CartOutline" Foreground="Black" 
                                              Height="30" Width="30"/>
                     <local:NumberBadge HorizontalAlignment="Right" 
                                        VerticalAlignment="Top"

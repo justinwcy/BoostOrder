@@ -1,6 +1,5 @@
 ﻿using BoostOrder.DbContexts;
 using BoostOrder.Models;
-using BoostOrder.ViewModels;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -43,8 +42,10 @@ namespace BoostOrder.Stores
             _carts.Clear();
             _carts.AddRange(dbContext.Carts
                 .Include(cart=>cart.Product)
-                .ThenInclude(product => product.Images));
-
+                .ThenInclude(product => product.Images)
+                .Include(cart=>cart.Product)
+                .ThenInclude(product=>product.Variations)
+                .AsNoTracking());
         }
 
         public async Task RemoveCart(Cart cart)
@@ -58,7 +59,7 @@ namespace BoostOrder.Stores
             CartsDeleted?.Invoke([cart]);
         }
 
-        public async Task AddProductToCart(Product product, int quantity, Guid userId)
+        public async Task AddProductToCart(Product product, int quantity, Guid userId, string sku)
         {
             await using var dbContext = _dbContextFactory.CreateDbContext();
             var cartFound = await dbContext.Carts
@@ -74,6 +75,7 @@ namespace BoostOrder.Stores
                     UserId = userId,
                     Quantity = quantity,
                     ProductId = product.Id,
+                    Sku = sku,
                 };
 
                 dbContext.Carts.Add(cartAdded);
@@ -103,16 +105,6 @@ namespace BoostOrder.Stores
 
             _carts.RemoveAll(cart => cart.UserId == userId);
             CartsDeleted?.Invoke(userCarts);
-        }
-
-        public async Task<int> GetUserCartCount(Guid userId)
-        {
-            await using var dbContext = _dbContextFactory.CreateDbContext();
-            var cartCount = await dbContext.Carts
-                .AsNoTracking()
-                .Where(cart => cart.UserId == userId)
-                .CountAsync();
-            return cartCount;
         }
     }
 }

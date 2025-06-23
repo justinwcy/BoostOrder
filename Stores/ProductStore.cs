@@ -1,13 +1,8 @@
-﻿using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text.Json;
-
-using BoostOrder.DbContexts;
+﻿using BoostOrder.DbContexts;
 using BoostOrder.HttpClients;
 using BoostOrder.Models;
 
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace BoostOrder.Stores
@@ -15,7 +10,7 @@ namespace BoostOrder.Stores
     public class ProductStore
     {
         private List<Product> _products;
-        private BoostOrderHttpClient _boostOrderHttpClient;
+        private readonly BoostOrderHttpClient _boostOrderHttpClient;
         private Lazy<Task> _initializeLazy;
         private IConfiguration _configuration;
         private readonly BoostOrderDbContextFactory _contextFactory;
@@ -66,7 +61,11 @@ namespace BoostOrder.Stores
             }
             else
             {
-                allProducts = dbContext.Products.ToList();
+                allProducts = dbContext.Products
+                    .Include(product=>product.Variations)
+                    .Include(product=>product.Images)
+                    .AsNoTracking()
+                    .ToList();
             }
 
             _products.Clear();

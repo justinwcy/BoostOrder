@@ -11,7 +11,7 @@ namespace BoostOrder.Commands
             catalogViewModel.IsLoading = true;
             try
             {
-                // load all from database
+                // load all from API / database
                 await productStore.Load();
                 // requirement wants to load only products with type being the word "variable"
                 catalogViewModel.SetProducts(productStore.Products

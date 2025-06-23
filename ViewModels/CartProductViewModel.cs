@@ -17,15 +17,16 @@ namespace BoostOrder.ViewModels
         public string Index => $"{_index}.";
         public Cart Cart { get; set; }
         public Guid Id => Cart.Id;
-        public string Sku => Cart.Product.Sku;
+        public string Sku => Cart.Sku;
         public string Name => Cart.Product.Name;
         public string StockQuantity => $"{Cart.Product.StockQuantity} in stock";
+        private double _productSkuPrice => Cart.Product.Variations
+            .First(v => v.Sku == Cart.Sku).RegularPrice;
         public string RegularPrice => 
-            $"RM {Cart.Product.RegularPrice
-                .ToString("N2", CultureInfo.InvariantCulture)}";
-        public string Quantity => $"{Cart.Quantity} UNIT >";
+            $"RM {_productSkuPrice.ToString("N2", CultureInfo.InvariantCulture)}";
+        public string Quantity => $"{Cart.Quantity} {Sku} >";
         public string TotalPrice =>
-            $"RM {(Cart.Quantity * Cart.Product.RegularPrice)
+            $"RM {(Cart.Quantity * _productSkuPrice)
                 .ToString("N2", CultureInfo.InvariantCulture)}";
 
         private string _imageBase64String;
