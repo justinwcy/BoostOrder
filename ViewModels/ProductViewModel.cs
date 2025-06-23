@@ -28,7 +28,7 @@ namespace BoostOrder.ViewModels
             set
             {
                 _imageBase64String = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(ImageBase64String));
             }
         }
 
@@ -58,7 +58,7 @@ namespace BoostOrder.ViewModels
             set
             {
                 _quantity = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(Quantity));
             }
         }
 

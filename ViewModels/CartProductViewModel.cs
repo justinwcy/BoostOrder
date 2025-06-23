@@ -5,7 +5,6 @@ using BoostOrder.Commands;
 using BoostOrder.Constants;
 using BoostOrder.HttpClients;
 using BoostOrder.Models;
-using BoostOrder.Services;
 using BoostOrder.Stores;
 
 namespace BoostOrder.ViewModels
@@ -17,17 +16,15 @@ namespace BoostOrder.ViewModels
         public string Index => $"{_index}.";
         public Cart Cart { get; set; }
         public Guid Id => Cart.Id;
-        public string Sku => Cart.Sku;
+        public string Sku => Cart.Product.Sku;
         public string Name => Cart.Product.Name;
         public string StockQuantity => $"{Cart.Product.StockQuantity} in stock";
-        private double _productSkuPrice => Cart.Product.Variations
-            .First(v => v.Sku == Cart.Sku).RegularPrice;
         public string RegularPrice => 
-            $"RM {_productSkuPrice.ToString("N2", CultureInfo.InvariantCulture)}";
-        public string Quantity => $"{Cart.Quantity} {Cart.Product.Variations
-            .First(v => v.Sku == Cart.Sku).UOM} >";
+            $"RM {Cart.Product.RegularPrice
+                .ToString("N2", CultureInfo.InvariantCulture)}";
+        public string Quantity => $"{Cart.Quantity} UNIT >";
         public string TotalPrice =>
-            $"RM {(Cart.Quantity * _productSkuPrice)
+            $"RM {(Cart.Quantity * Cart.Product.RegularPrice)
                 .ToString("N2", CultureInfo.InvariantCulture)}";
 
         private string _imageBase64String;
@@ -37,7 +34,7 @@ namespace BoostOrder.ViewModels
             set
             {
                 _imageBase64String = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(ImageBase64String));
             }
         }
 
