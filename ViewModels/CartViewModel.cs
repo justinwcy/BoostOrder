@@ -24,7 +24,7 @@ namespace BoostOrder.ViewModels
             {
                 _cartProductViewModels = value;
                 OnPropertyChanged(nameof(GrandTotal));
-                OnPropertyChanged(nameof(CartProductViewModels));
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(TotalItems));
                 OnPropertyChanged(nameof(TotalBarVisible));
             }
@@ -37,7 +37,7 @@ namespace BoostOrder.ViewModels
             set
             {
                 _isLoading = value;
-                OnPropertyChanged(nameof(IsLoading));
+                OnPropertyChanged();
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Windows.Input;
 
 using BoostOrder.Commands;
@@ -18,7 +19,7 @@ namespace BoostOrder.ViewModels
         public string Name => Product.Name;
         public string StockQuantity => $"{Product.StockQuantity} in stock";
         public string RegularPrice => 
-            $"RM {Product.RegularPrice.ToString("N2", CultureInfo.InvariantCulture)}";
+            $"RM {SelectedVariation.RegularPrice.ToString("N2", CultureInfo.InvariantCulture)}";
 
         private string _imageBase64String;
         public string ImageBase64String
@@ -28,6 +29,21 @@ namespace BoostOrder.ViewModels
             {
                 _imageBase64String = value;
                 OnPropertyChanged(nameof(ImageBase64String));
+            }
+        }
+
+        public ObservableCollection<ProductVariation> AvailableVariations 
+            => new(Product.Variations);
+
+        private ProductVariation _selectedVariation;
+        public ProductVariation SelectedVariation
+        {
+            get => _selectedVariation;
+            set
+            {
+                _selectedVariation = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(RegularPrice));
             }
         }
 
@@ -45,8 +61,6 @@ namespace BoostOrder.ViewModels
                 OnPropertyChanged(nameof(Quantity));
             }
         }
-
-        public double Total => Quantity * Product.RegularPrice;
 
         public ProductViewModel(
             Product product, 
@@ -66,6 +80,7 @@ namespace BoostOrder.ViewModels
                 boostOrderDbContextFactory,
                 cartStore);
             _ = LoadProductImageAsync();
+            SelectedVariation = Product.Variations.FirstOrDefault();
         }
 
         private async Task LoadProductImageAsync()

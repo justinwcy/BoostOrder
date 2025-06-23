@@ -68,8 +68,11 @@
                     Orientation="Horizontal" 
                     HorizontalAlignment="Right" Height="30"
                     Margin="5">
-            <TextBox Text="UNIT" BorderBrush="Gray" BorderThickness="1" 
-                     Padding="0 0 10 0"/>
+            <ComboBox ItemsSource="{Binding AvailableVariations}" 
+                      SelectedItem="{Binding SelectedVariation, Mode=TwoWay}"
+                      DisplayMemberPath="UOM"
+                      BorderBrush="Gray" BorderThickness="1" 
+                      Padding="0 5 10 5"/>
             <Button Background="White" 
                     BorderBrush="Gray" BorderThickness="2"
                     Foreground="Black"
