@@ -65,6 +65,7 @@ namespace BoostOrder.Stores
             var cartFound = await dbContext.Carts
                 .Where(cart => cart.UserId == userId)
                 .Where(cart => cart.ProductId == product.Id)
+                .Where(cart => cart.Sku == product.Sku)
                 .FirstOrDefaultAsync();
 
             Cart cartAdded;
