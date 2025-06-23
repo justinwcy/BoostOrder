@@ -1,13 +1,12 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿using System.Windows;
+
 using BoostOrder.Constants;
 using BoostOrder.DbContexts;
 using BoostOrder.HttpClients;
 using BoostOrder.Services;
 using BoostOrder.Stores;
 using BoostOrder.ViewModels;
-using BoostOrder.Views;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

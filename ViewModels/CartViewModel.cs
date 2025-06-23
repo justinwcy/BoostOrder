@@ -46,7 +46,7 @@ namespace BoostOrder.ViewModels
         public HeaderViewModel<CatalogViewModel> HeaderViewModel { get; }
 
         public string GrandTotal => $"RM {CartProductViewModels
-            .Sum(cartProductViewModel => cartProductViewModel.Cart.Quantity * cartProductViewModel.Cart.Product.Variations.First(v => v.Sku == cartProductViewModel.Sku).RegularPrice)
+            .Sum(cartProductViewModel => cartProductViewModel.Cart.Quantity * cartProductViewModel.Cart.Product.Variations.First(v => v.Sku == cartProductViewModel.Cart.Sku).RegularPrice)
             .ToString("N2", CultureInfo.InvariantCulture)}";
 
         public string TotalItems => $"Total ({CartProductViewModels.Count()})";
