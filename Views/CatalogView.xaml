@@ -54,11 +54,13 @@
                     Background="White" 
                     BorderBrush="White"
                     Command="{Binding CartPageCommand}">
-                <StackPanel>
-
+                <Grid>
                     <materialDesign:PackIcon Kind="Cart" Foreground="Black" 
                                              Height="30" Width="30"/>
-                </StackPanel>
+                    <local:NumberBadge HorizontalAlignment="Right" 
+                                       VerticalAlignment="Top"
+                                       DataContext="{Binding NumberBadgeVM}"/>
+                </Grid>
                 
             </Button>
         </Grid>

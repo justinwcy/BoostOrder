@@ -104,5 +104,15 @@ namespace BoostOrder.Stores
             _carts.RemoveAll(cart => cart.UserId == userId);
             CartsDeleted?.Invoke(userCarts);
         }
+
+        public async Task<int> GetUserCartCount(Guid userId)
+        {
+            await using var dbContext = _dbContextFactory.CreateDbContext();
+            var cartCount = await dbContext.Carts
+                .AsNoTracking()
+                .Where(cart => cart.UserId == userId)
+                .CountAsync();
+            return cartCount;
+        }
     }
 }

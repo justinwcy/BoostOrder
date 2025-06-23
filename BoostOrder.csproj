@@ -26,6 +26,9 @@
     <Compile Update="Views\CartProductView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\NumberBadge.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

@@ -64,7 +64,7 @@ namespace BoostOrder.ViewModels
             _cartStore.CartsDeleted += OnCartsDeleted;
             _cartStore.CartsAdded += OnCartsAdded;
             _boostOrderHttpClient = boostOrderHttpClient;
-            LoadCartCommand = new LoadCartCommand(this, _cartStore, userId);
+            LoadCartCommand = new LoadCartCommand(_cartStore, userId);
             HeaderViewModel = new HeaderViewModel<CatalogViewModel>(
                 "Cart", catalogViewNavigationService, userId, cartStore);
             CheckoutCommand = new CheckoutCommand();
@@ -127,7 +127,7 @@ namespace BoostOrder.ViewModels
                 catalogViewNavigationService, 
                 boostOrderHttpClient);
             viewModel.LoadCartCommand.Execute(null);
-
+            viewModel.UpdateCarts(cartStore.Carts.Where(cart => cart.UserId == userId));
             return viewModel;
         }
 

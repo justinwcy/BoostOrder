@@ -28,6 +28,8 @@ namespace BoostOrder.ViewModels
 
         public ICommand LoadProductsCommand { get; }
 
+        public ICommand LoadCartCommand { get; }
+
         public ICommand CartPageCommand { get; }
 
         private Guid _userId { get; set; }
@@ -35,6 +37,7 @@ namespace BoostOrder.ViewModels
         private BoostOrderDbContextFactory _boostOrderDbContextFactory { get; set; }
 
         public HeaderViewModel<CartViewModel> HeaderViewModel { get; }
+        public NumberBadgeViewModel NumberBadgeVM { get; }
 
         private IEnumerable<ProductViewModel> _productViewModels;
 
@@ -63,6 +66,18 @@ namespace BoostOrder.ViewModels
             }
         }
 
+        private int _cartCount;
+        public int CartCount
+        {
+            get => _cartCount;
+            set
+            {
+                _cartCount = value;
+                NumberBadgeVM.Number = CartCount;
+                OnPropertyChanged(nameof(CartCount));
+            }
+        }
+
         public CatalogViewModel(
             ProductStore productStore,
             CartStore cartStore,
@@ -74,11 +89,18 @@ namespace BoostOrder.ViewModels
             _userId = userId;
             _boostOrderDbContextFactory = boostOrderDbContextFactory;
             _boostOrderHttpClient = boostOrderHttpClient;
+
             _cartStore = cartStore;
+            _cartStore.CartsAdded += UpdateAddCartCount;
+            _cartStore.CartsDeleted += UpdateRemoveCartCount;
+
+            LoadCartCommand = new LoadCartCommand(cartStore, userId);
             LoadProductsCommand = new LoadProductsCommand(this, productStore);
             CartPageCommand = new NavigateCommand<CartViewModel>(cartViewNavigationService);
+
             HeaderViewModel = new HeaderViewModel<CartViewModel>(
                 "Category Name", cartViewNavigationService, userId, cartStore);
+            NumberBadgeVM = new NumberBadgeViewModel(0);
         }
 
         public static CatalogViewModel LoadViewModel(
@@ -89,7 +111,6 @@ namespace BoostOrder.ViewModels
             Guid userId,
             BoostOrderDbContextFactory boostOrderDbContextFactory)
         {
-            
             var viewModel = new CatalogViewModel(
                 productStore,
                 cartStore,
@@ -98,8 +119,20 @@ namespace BoostOrder.ViewModels
                 userId, 
                 boostOrderDbContextFactory);
             viewModel.LoadProductsCommand.Execute(null);
-
+            viewModel.LoadCartCommand.Execute(null);
+            
+            viewModel.CartCount = cartStore.Carts.Count(cart => cart.UserId == userId);
             return viewModel;
+        }
+
+        public void UpdateAddCartCount(IEnumerable<Cart> addedCarts)
+        {
+            CartCount = _cartStore.Carts.Count(cart => cart.UserId == _userId);
+        }
+
+        public void UpdateRemoveCartCount(IEnumerable<Cart> removedCarts)
+        {
+            CartCount = _cartStore.Carts.Count(cart => cart.UserId == _userId);
         }
 
         public void SetProducts(IEnumerable<Product> products)

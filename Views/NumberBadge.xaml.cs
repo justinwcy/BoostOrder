@@ -3,11 +3,11 @@
 namespace BoostOrder.Views
 {
     /// <summary>
-    /// Interaction logic for ProductView.xaml
+    /// Interaction logic for CircularTextIcon.xaml
     /// </summary>
-    public partial class CatalogView : UserControl
+    public partial class NumberBadge : UserControl
     {
-        public CatalogView()
+        public NumberBadge()
         {
             InitializeComponent();
         }
