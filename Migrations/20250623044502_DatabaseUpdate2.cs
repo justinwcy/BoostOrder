@@ -5,14 +5,14 @@
 namespace BoostOrder.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial4 : Migration
+    public partial class DatabaseUpdate2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "Type",
-                table: "Products",
+                name: "UOM",
+                table: "ProductVariation",
                 type: "nvarchar(max)",
                 nullable: false,
                 defaultValue: "");
@@ -22,8 +22,8 @@ namespace BoostOrder.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Type",
-                table: "Products");
+                name: "UOM",
+                table: "ProductVariation");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace BoostOrder.Models
 {
@@ -6,10 +7,19 @@ namespace BoostOrder.Models
     {
         [Key]
         public Guid Id { get; set; }
+
+        [JsonPropertyName("src")]
         public string Src { get; set; }
-        public string Src_Small { get; set; }
-        public string Src_Medium { get; set; }
-        public string Src_Large { get; set; }
+
+        [JsonPropertyName("src_small")]
+        public string SrcSmall { get; set; }
+
+        [JsonPropertyName("src_medium")]
+        public string SrcMedium { get; set; }
+
+        [JsonPropertyName("src_large")]
+        public string SrcLarge { get; set; }
+
         public int ProductId { get; set; }
         public Product Product { get; set; }
     }

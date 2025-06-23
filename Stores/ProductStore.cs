@@ -54,8 +54,12 @@ namespace BoostOrder.Stores
             await using var dbContext = _contextFactory.CreateDbContext();
             if (allProducts.Any())
             {
-                // save it into database
+                // save it into database for offline use in case
+                // clear existing data and replace
                 dbContext.Products.RemoveRange(dbContext.Products);
+                dbContext.ProductImages.RemoveRange(dbContext.ProductImages);
+                dbContext.ProductVariations.RemoveRange(dbContext.ProductVariations);
+
                 dbContext.Products.AddRange(allProducts);
 
                 await dbContext.SaveChangesAsync();

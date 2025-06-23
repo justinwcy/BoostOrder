@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BoostOrder.Migrations
 {
     [DbContext(typeof(BoostOrderDbContext))]
-    [Migration("20250621125253_Initial4")]
-    partial class Initial4
+    [Migration("20250623034654_DatabaseUpdate1")]
+    partial class DatabaseUpdate1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,6 +41,8 @@ namespace BoostOrder.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Carts");
                 });
@@ -84,25 +86,67 @@ namespace BoostOrder.Migrations
 
                     b.Property<string>("Src")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasAnnotation("Relational:JsonPropertyName", "src");
 
-                    b.Property<string>("Src_Large")
+                    b.Property<string>("SrcLarge")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasAnnotation("Relational:JsonPropertyName", "src_large");
 
-                    b.Property<string>("Src_Medium")
+                    b.Property<string>("SrcMedium")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasAnnotation("Relational:JsonPropertyName", "src_medium");
 
-                    b.Property<string>("Src_Small")
+                    b.Property<string>("SrcSmall")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasAnnotation("Relational:JsonPropertyName", "src_small");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductImage");
+                });
+
+            modelBuilder.Entity("BoostOrder.Models.ProductVariation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("RegularPrice")
+                        .HasColumnType("float")
+                        .HasAnnotation("Relational:JsonPropertyName", "regular_price");
+
+                    b.Property<string>("Sku")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StockQuantity")
+                        .HasColumnType("int")
+                        .HasAnnotation("Relational:JsonPropertyName", "stock_quantity");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductVariation");
+                });
+
+            modelBuilder.Entity("BoostOrder.Models.Cart", b =>
+                {
+                    b.HasOne("BoostOrder.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("BoostOrder.Models.ProductImage", b =>
@@ -116,9 +160,22 @@ namespace BoostOrder.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("BoostOrder.Models.ProductVariation", b =>
+                {
+                    b.HasOne("BoostOrder.Models.Product", "Product")
+                        .WithMany("Variations")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("BoostOrder.Models.Product", b =>
                 {
                     b.Navigation("Images");
+
+                    b.Navigation("Variations");
                 });
 #pragma warning restore 612, 618
         }

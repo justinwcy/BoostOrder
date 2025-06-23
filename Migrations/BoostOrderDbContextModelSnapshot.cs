@@ -54,14 +54,16 @@ namespace BoostOrder.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("RegularPrice")
-                        .HasColumnType("float");
+                        .HasColumnType("float")
+                        .HasAnnotation("Relational:JsonPropertyName", "regular_price");
 
                     b.Property<string>("Sku")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("StockQuantity")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasAnnotation("Relational:JsonPropertyName", "stock_quantity");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -83,17 +85,52 @@ namespace BoostOrder.Migrations
 
                     b.Property<string>("Src")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasAnnotation("Relational:JsonPropertyName", "src");
 
-                    b.Property<string>("Src_Large")
+                    b.Property<string>("SrcLarge")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasAnnotation("Relational:JsonPropertyName", "src_large");
+
+                    b.Property<string>("SrcMedium")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasAnnotation("Relational:JsonPropertyName", "src_medium");
+
+                    b.Property<string>("SrcSmall")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasAnnotation("Relational:JsonPropertyName", "src_small");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages");
+                });
+
+            modelBuilder.Entity("BoostOrder.Models.ProductVariation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("RegularPrice")
+                        .HasColumnType("float")
+                        .HasAnnotation("Relational:JsonPropertyName", "regular_price");
+
+                    b.Property<string>("Sku")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Src_Medium")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("StockQuantity")
+                        .HasColumnType("int")
+                        .HasAnnotation("Relational:JsonPropertyName", "stock_quantity");
 
-                    b.Property<string>("Src_Small")
+                    b.Property<string>("UOM")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -101,7 +138,7 @@ namespace BoostOrder.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImage");
+                    b.ToTable("ProductVariations");
                 });
 
             modelBuilder.Entity("BoostOrder.Models.Cart", b =>
@@ -126,9 +163,22 @@ namespace BoostOrder.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("BoostOrder.Models.ProductVariation", b =>
+                {
+                    b.HasOne("BoostOrder.Models.Product", "Product")
+                        .WithMany("Variations")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("BoostOrder.Models.Product", b =>
                 {
                     b.Navigation("Images");
+
+                    b.Navigation("Variations");
                 });
 #pragma warning restore 612, 618
         }
