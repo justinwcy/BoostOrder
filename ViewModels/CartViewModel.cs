@@ -136,7 +136,7 @@ namespace BoostOrder.ViewModels
             CartProductViewModels = new ObservableCollection<CartProductViewModel>(
                 carts
                     .Select((cart, index) => 
-                        new CartProductViewModel(index, cart, _boostOrderHttpClient, _cartStore)));
+                        new CartProductViewModel(index + 1, cart, _boostOrderHttpClient, _cartStore)));
         }
     }
 }
