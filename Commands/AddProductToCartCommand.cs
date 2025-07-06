@@ -1,6 +1,4 @@
 ﻿using System.ComponentModel;
-
-using BoostOrder.DbContexts;
 using BoostOrder.Models;
 using BoostOrder.Stores;
 using BoostOrder.ViewModels;
@@ -12,17 +10,14 @@ namespace BoostOrder.Commands
     public class AddProductToCartCommand : AsyncCommandBase, IDisposable
     {
         private readonly Guid _userId;
-        private readonly BoostOrderDbContextFactory _boostOrderDbContextFactory;
         private readonly ProductViewModel _productViewModel;
         private readonly CartStore _cartStore;
 
         public AddProductToCartCommand(Guid userId,
             ProductViewModel productViewModel,
-            BoostOrderDbContextFactory boostOrderDbContextFactory,
             CartStore cartStore)
         {
             _userId = userId;
-            _boostOrderDbContextFactory = boostOrderDbContextFactory;
             _productViewModel = productViewModel;
             _cartStore = cartStore;
             productViewModel.PropertyChanged += OnViewModelPropertyChanged;

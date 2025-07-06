@@ -13,13 +13,13 @@ namespace BoostOrder.Stores
         private readonly BoostOrderHttpClient _boostOrderHttpClient;
         private Lazy<Task> _initializeLazy;
         private IConfiguration _configuration;
-        private readonly BoostOrderDbContextFactory _contextFactory;
+        private readonly IDbContextFactory<BoostOrderDbContext> _contextFactory;
         public IEnumerable<Product> Products => _products;
 
         public ProductStore(
             BoostOrderHttpClient boostOrderHttpClient, 
-            IConfiguration configuration, 
-            BoostOrderDbContextFactory contextFactory)
+            IConfiguration configuration,
+            IDbContextFactory<BoostOrderDbContext> contextFactory)
         {
             _boostOrderHttpClient = boostOrderHttpClient;
             _configuration = configuration;
@@ -46,7 +46,7 @@ namespace BoostOrder.Stores
         {
             // Get products
             var allProducts = await _boostOrderHttpClient.GetProducts();
-            await using var dbContext = _contextFactory.CreateDbContext();
+            await using var dbContext = await _contextFactory.CreateDbContextAsync();
             if (allProducts.Any())
             {
                 // save it into database for offline use in case

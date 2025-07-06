@@ -8,6 +8,7 @@ using BoostOrder.DbContexts;
 using BoostOrder.HttpClients;
 using BoostOrder.Models;
 using BoostOrder.Stores;
+using Microsoft.EntityFrameworkCore;
 
 namespace BoostOrder.ViewModels
 {
@@ -28,7 +29,7 @@ namespace BoostOrder.ViewModels
             set
             {
                 _imageBase64String = value;
-                OnPropertyChanged(nameof(ImageBase64String));
+                OnPropertyChanged();
             }
         }
 
@@ -58,7 +59,7 @@ namespace BoostOrder.ViewModels
             set
             {
                 _quantity = value;
-                OnPropertyChanged(nameof(Quantity));
+                OnPropertyChanged();
             }
         }
 
@@ -66,7 +67,7 @@ namespace BoostOrder.ViewModels
             Product product, 
             BoostOrderHttpClient boostOrderHttpClient,
             Guid userId,
-            BoostOrderDbContextFactory boostOrderDbContextFactory,
+            IDbContextFactory<BoostOrderDbContext> boostOrderDbContextFactory,
             CartStore cartStore
             )
         {
@@ -76,8 +77,7 @@ namespace BoostOrder.ViewModels
             DecrementQuantityCommand = new DecrementQuantityCommand(this);
             AddProductToCartCommand = new AddProductToCartCommand(
                 userId,
-                this, 
-                boostOrderDbContextFactory,
+                this,
                 cartStore);
             _ = LoadProductImageAsync();
             SelectedVariation = Product.Variations.FirstOrDefault();

@@ -1,9 +1,8 @@
-﻿using BoostOrder.DbContexts;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace BoostOrder.DbContexts
 {
-    public class BoostOrderDbContextFactory(string connectionString)
+    public class BoostOrderDbContextFactory(string connectionString) : IDbContextFactory<BoostOrderDbContext>
     {
         public BoostOrderDbContext CreateDbContext()
         {

@@ -8,6 +8,8 @@ using BoostOrder.Models;
 using BoostOrder.Services;
 using BoostOrder.Stores;
 
+using Microsoft.EntityFrameworkCore;
+
 namespace BoostOrder.ViewModels
 {
     public class CatalogViewModel : ViewModelBase
@@ -34,7 +36,7 @@ namespace BoostOrder.ViewModels
 
         private Guid _userId { get; set; }
 
-        private BoostOrderDbContextFactory _boostOrderDbContextFactory { get; set; }
+        private IDbContextFactory<BoostOrderDbContext> _boostOrderDbContextFactory { get; set; }
 
         public HeaderViewModel<CartViewModel> HeaderViewModel { get; }
         public NumberBadgeViewModel NumberBadgeVM { get; }
@@ -84,7 +86,7 @@ namespace BoostOrder.ViewModels
             NavigationService<CartViewModel> cartViewNavigationService,
             BoostOrderHttpClient boostOrderHttpClient,
             Guid userId,
-            BoostOrderDbContextFactory boostOrderDbContextFactory)
+            IDbContextFactory<BoostOrderDbContext> boostOrderDbContextFactory)
         {
             _userId = userId;
             _boostOrderDbContextFactory = boostOrderDbContextFactory;
@@ -109,7 +111,7 @@ namespace BoostOrder.ViewModels
             NavigationService<CartViewModel> cartViewNavigationService,
             BoostOrderHttpClient boostOrderHttpClient,
             Guid userId,
-            BoostOrderDbContextFactory boostOrderDbContextFactory)
+            IDbContextFactory<BoostOrderDbContext> boostOrderDbContextFactory)
         {
             var viewModel = new CatalogViewModel(
                 productStore,

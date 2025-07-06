@@ -5,7 +5,7 @@ namespace BoostOrder.Commands
 {
     public class DecrementQuantityCommand : CommandBase, IDisposable
     {
-        private ProductViewModel _productViewModel;
+        private readonly ProductViewModel _productViewModel;
         public DecrementQuantityCommand(ProductViewModel productViewModel)
         {
             _productViewModel = productViewModel;

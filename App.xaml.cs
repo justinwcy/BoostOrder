@@ -28,9 +28,7 @@ namespace BoostOrder
                     var connectionString = hostContext.Configuration.GetConnectionString("Default");
                     services.AddDbContextFactory<BoostOrderDbContext>(
                         options => options.UseSqlServer(connectionString),
-                        ServiceLifetime.Transient);
-                    services.AddScoped<BoostOrderDbContextFactory>(x =>
-                        new BoostOrderDbContextFactory(connectionString));
+                        ServiceLifetime.Scoped);
 
                     services.AddTransient<CatalogViewModel>(CreateProductViewModel);
                     services.AddSingleton<Func<CatalogViewModel>>((s) => s.GetRequiredService<CatalogViewModel>);
@@ -70,7 +68,7 @@ namespace BoostOrder
                 serviceProvider.GetRequiredService<NavigationService<CartViewModel>>(),
                 serviceProvider.GetRequiredService<BoostOrderHttpClient>(),
                 AppConstants.UserId,
-                serviceProvider.GetRequiredService<BoostOrderDbContextFactory>()
+                serviceProvider.GetRequiredService<IDbContextFactory<BoostOrderDbContext>>()
                 );
         }
 
@@ -87,7 +85,7 @@ namespace BoostOrder
         protected override void OnStartup(StartupEventArgs e)
         {
             _host.Start();
-            var dbContextFactory = _host.Services.GetRequiredService<BoostOrderDbContextFactory>();
+            var dbContextFactory = _host.Services.GetRequiredService<IDbContextFactory<BoostOrderDbContext>>();
             using (var dbContext = dbContextFactory.CreateDbContext())
             {
                 dbContext.Database.Migrate();

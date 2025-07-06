@@ -9,12 +9,12 @@ namespace BoostOrder.Stores
     {
         private readonly List<Cart> _carts;
         private Lazy<Task> _initializeLazy;
-        private readonly BoostOrderDbContextFactory _dbContextFactory;
+        private readonly IDbContextFactory<BoostOrderDbContext> _dbContextFactory;
         public IEnumerable<Cart> Carts => _carts;
         public event Action<IEnumerable<Cart>> CartsDeleted;
         public event Action<IEnumerable<Cart>> CartsAdded;
 
-        public CartStore(BoostOrderDbContextFactory dbContextFactory)
+        public CartStore(IDbContextFactory<BoostOrderDbContext> dbContextFactory)
         {
             _dbContextFactory = dbContextFactory;
             _carts = new List<Cart>();
@@ -37,7 +37,7 @@ namespace BoostOrder.Stores
 
         private async Task Initialize()
         {
-            await using var dbContext = _dbContextFactory.CreateDbContext();
+            await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
 
             _carts.Clear();
             _carts.AddRange(dbContext.Carts
@@ -50,7 +50,7 @@ namespace BoostOrder.Stores
 
         public async Task RemoveCart(Cart cart)
         {
-            await using var dbContext = _dbContextFactory.CreateDbContext();
+            await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
             dbContext.Carts.Remove(cart);
             await dbContext.SaveChangesAsync();
 

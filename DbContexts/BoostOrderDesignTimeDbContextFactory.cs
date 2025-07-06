@@ -8,7 +8,7 @@ namespace BoostOrder.DbContexts
         public BoostOrderDbContext CreateDbContext(string[] args)
         {
             var dbContextOptionBuilder = new DbContextOptionsBuilder()
-                .UseSqlServer(@"Server=(localdb)\\MSSQLLocalDB;Database=BoostOrderDb;")
+                .UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=BoostOrderDb;")
                 .Options;
 
             return new BoostOrderDbContext(dbContextOptionBuilder);
